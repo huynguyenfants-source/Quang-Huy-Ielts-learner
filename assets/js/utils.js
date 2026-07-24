@@ -73,6 +73,8 @@ export function openModal({ title, body, footer, wide = false }) {
   modal.append(header);
 
   if (typeof body === 'string') {
+    // Only pass trusted, static HTML as a string body; user-supplied content
+    // should be passed as a DOM Node to avoid XSS.
     const d = el('div', { class: 'modal-body' });
     d.innerHTML = body;
     modal.append(d);

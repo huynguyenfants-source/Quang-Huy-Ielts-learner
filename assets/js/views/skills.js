@@ -77,7 +77,10 @@ export function renderDashboard(container) {
     '🗣️ Ghi âm phần Speaking và tự nghe lại để phát hiện lỗi phát âm.',
   ];
   const tip = el('div', { class: 'card', style: 'margin-top:1.5rem;background:var(--clr-primary);color:#fff' });
-  tip.innerHTML = `<div class="card-title" style="color:#fff">Mẹo hôm nay</div><p>${tips[new Date().getDay() % tips.length]}</p>`;
+  tip.append(
+    el('div', { class: 'card-title', style: 'color:#fff' }, 'Mẹo hôm nay'),
+    el('p', {}, tips[new Date().getDay() % tips.length]),
+  );
   container.append(tip);
 }
 
@@ -205,8 +208,10 @@ export function renderWriting(container) {
       card.append(el('h3', { style: 'margin-bottom:.5rem' }, `⚠️ Lỗi phát hiện (${fb.errors.length})`));
       const errList = el('div', { class: 'flex-col' });
       for (const e of fb.errors.slice(0, 15)) {
-        const item = el('div', { class: 'mistake-item' });
-        item.innerHTML = `<strong>${e.match}</strong> — ${e.message}`;
+        const item = el('div', { class: 'mistake-item' },
+          el('strong', {}, e.match),
+          ` — ${e.message}`,
+        );
         errList.append(item);
       }
       card.append(errList);
@@ -588,8 +593,11 @@ export function renderMock(container) {
 
   const grid = el('div', { class: 'grid-2', style: 'margin-bottom:1.5rem' });
   for (const sk of skills) {
-    const card = el('div', { class: 'card', style: 'cursor:pointer' });
-    card.innerHTML = `<div style="font-size:2rem">${sk.icon}</div><h3>${sk.label}</h3><p class="muted">${sk.duration} phút</p>`;
+    const card = el('div', { class: 'card', style: 'cursor:pointer' },
+      el('div', { style: 'font-size:2rem' }, sk.icon),
+      el('h3', {}, sk.label),
+      el('p', { class: 'muted' }, `${sk.duration} phút`),
+    );
     card.addEventListener('click', () => startMock(sk));
     grid.append(card);
   }
