@@ -2,7 +2,7 @@
 import { el, toast, openModal, closeModal, fmtDate, uuid, confirm, debounce } from '../utils.js';
 import {
   getVocab, addVocabItem, deleteVocabItem, updateVocabItem,
-  getMistakes, addMistake, deleteMistake,
+  getMistakes, saveMistakes, addMistake, deleteMistake,
   getDocs, addDoc, deleteDoc, updateDoc,
   getImages, addImage, deleteImage,
   getChatHistory, appendChat, clearChat,
@@ -157,7 +157,15 @@ export function renderVocab(container) {
         resultEl.textContent = '⏳ Đang tra…';
         try {
           const info = await lookupWord(word);
-          resultEl.innerHTML = `<strong>${info.word}</strong> ${info.phonetic || ''}<br>${info.definition || ''}<br><em>${(info.examples || []).join(' / ')}</em>`;
+          resultEl.innerHTML = '';
+          resultEl.append(
+            el('strong', {}, info.word || ''),
+            document.createTextNode(' ' + (info.phonetic || '')),
+            el('br'),
+            document.createTextNode(info.definition || ''),
+            el('br'),
+            el('em', {}, (info.examples || []).join(' / ')),
+          );
           const addBtn2 = el('button', { class: 'btn sm', style: 'margin-top:.5rem' }, '➕ Thêm vào từ vựng');
           addBtn2.addEventListener('click', () => {
             addVocabItem({ id: uuid(), word: info.word, phonetic: info.phonetic, definition: info.definition, example: (info.examples || [])[0] || '', date: new Date().toISOString(), review: 0 });
@@ -212,7 +220,11 @@ export function renderMistakes(container) {
             ),
           ),
           el('div', { style: 'display:flex;gap:.3rem;flex-shrink:0' },
-            el('button', { class: 'btn secondary sm', onclick: () => { const mis = getMistakes().find(x => x.id === m.id); if (mis) { mis.count = (mis.count || 1) + 1; const all = getMistakes().map(x => x.id === m.id ? mis : x); saveMistakesInPlace(all); build(); } }}, '＋1'),
+            el('button', { class: 'btn secondary sm', onclick: () => {
+              const all = getMistakes().map(x => x.id === m.id ? { ...x, count: (x.count || 1) + 1 } : x);
+              saveMistakes(all);
+              build();
+            }}, '＋1'),
             el('button', { class: 'btn danger sm', onclick: () => confirm('Xoá lỗi này?', () => { deleteMistake(m.id); build(); }) }, '🗑️'),
           ),
         )
@@ -222,9 +234,7 @@ export function renderMistakes(container) {
     container.append(list);
   }
 
-  function saveMistakesInPlace(list) {
-    import('../store.js').then(m => m.saveMistakes(list));
-  }
+  function saveMistakesInPlace(_list) { /* replaced by direct saveMistakes import */ }
 
   function showAddModal() {
     const titleI = el('input', { type: 'text', placeholder: 'Tên lỗi…' });

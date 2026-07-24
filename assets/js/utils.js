@@ -24,7 +24,7 @@ export function html(strings, ...vals) {
 }
 
 /** Simple UUID v4 */
-export const uuid = () => crypto.randomUUID
+export const uuid = () => typeof crypto?.randomUUID === 'function'
   ? crypto.randomUUID()
   : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       const r = Math.random() * 16 | 0;
@@ -121,6 +121,15 @@ export function renderTabs(container, tabs, active, onChange) {
   container.prepend(bar);
 }
 
+/* ── HTML-escape helper ─────────────────────────────────── */
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 /* ── Highlight text diff ────────────────────────────────── */
 export function diffHtml(original, corrected) {
   const orig = original.split(/\s+/);
@@ -139,8 +148,8 @@ export function diffHtml(original, corrected) {
   }
 
   return res.map(r => {
-    if (r.t === 'same') return r.w;
-    if (r.t === 'add')  return `<span class="diff-add">${r.w}</span>`;
-    return `<span class="diff-del">${r.w}</span>`;
+    if (r.t === 'same') return escHtml(r.w);
+    if (r.t === 'add')  return `<span class="diff-add">${escHtml(r.w)}</span>`;
+    return `<span class="diff-del">${escHtml(r.w)}</span>`;
   }).join(' ');
 }

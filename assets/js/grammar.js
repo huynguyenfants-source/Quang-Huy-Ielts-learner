@@ -2,11 +2,11 @@
 
 /* ── Error rules ─────────────────────────────────────────── */
 export const RULES = [
-  // Articles
+  // Articles — only flag 'a' before words with a clearly vowel sound (exclude 'u' and 'eu' words)
   {
     id: 'art1',
-    pattern: /\b(a)\s+[aeiou]/gi,
-    message: 'Dùng "an" trước âm nguyên âm (an hour, an apple).',
+    pattern: /\ba\s+(?=[aeiou])(?!ni|nit|niv|nif|ni[a-z]|[eE]u)/gi,
+    message: 'Dùng "an" trước âm nguyên âm (an hour, an apple). Lưu ý: "a university", "a European" vẫn đúng vì bắt đầu bằng phụ âm /j/.',
     type: 'grammar',
   },
   // Subject-verb agreement (simple cases)

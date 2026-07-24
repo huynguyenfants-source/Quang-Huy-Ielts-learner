@@ -24,6 +24,8 @@ export function getSettings() {
     targetBand: 7.0,
     theme: 'light',
     aiProvider: 'gemini',
+    /* apiKeys are stored client-side only and sent directly to the respective
+       AI provider from the user's browser — no server intermediary. */
     apiKeys: {},
     githubToken: '',
     githubGistId: '',
