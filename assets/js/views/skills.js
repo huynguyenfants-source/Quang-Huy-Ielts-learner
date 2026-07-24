@@ -106,7 +106,7 @@ export function Writing() {
       const out = await ai.gradeWriting(current.type, current.prompt, editor.value);
       result.innerHTML = '';
       result.append(el(`<div class="card"><h3>🤖 Nhận xét từ ${esc(ai.PROVIDERS[ai.currentProvider()].label)}</h3><div style="white-space:pre-wrap">${esc(out)}</div></div>`));
-      const band = (out.match(/overall[^0-9]*([0-9]\.?[05]?)/i) || [])[1];
+      const band = (out.match(/overall[^0-9]*([0-9](?:\.[05])?)/i) || [])[1];
       store.logAttempt('Writing', band ? +band : 6, { title: current.title, mode: 'ai' });
     } catch (e) { toast(e.message, 'error'); }
     finally { btn.disabled = false; btn.textContent = '🤖 Chấm bằng AI'; }

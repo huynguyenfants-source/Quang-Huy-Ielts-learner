@@ -14,13 +14,9 @@ export function html(strings, ...values) {
 }
 
 /** Escape untrusted text for safe HTML interpolation. */
+const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 export function esc(str = '') {
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+  return String(str).replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch]);
 }
 
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);

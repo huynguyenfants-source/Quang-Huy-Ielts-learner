@@ -17,18 +17,22 @@ export function Vocab() {
   wrap.append(lookOut);
 
   const doLook = () => {
-    const w = $('#vq', tools).value.trim();
-    if (!w) return;
+    const raw = $('#vq', tools).value.trim();
+    if (!raw) return;
+    // Restrict lookups to plain words/phrases (letters, spaces, hyphen, apostrophe).
+    const w = raw.replace(/[^\p{L}\p{N}\s'-]/gu, '').slice(0, 60).trim();
+    if (!w) return toast('Từ tra không hợp lệ.', 'error');
+    const q = encodeURIComponent(w);
     lookOut.innerHTML = '';
     lookOut.append(el(`<div class="card">
       <div class="row between"><h3>“${esc(w)}”</h3>
         <div class="row">
-          <a class="btn ghost sm" target="_blank" rel="noopener" href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(w)}">📖 Cambridge</a>
-          <a class="btn ghost sm" target="_blank" rel="noopener" href="https://youglish.com/pronounce/${encodeURIComponent(w)}/english">▶️ YouGlish</a>
+          <a class="btn ghost sm" target="_blank" rel="noopener" href="https://dictionary.cambridge.org/dictionary/english/${q}">📖 Cambridge</a>
+          <a class="btn ghost sm" target="_blank" rel="noopener" href="https://youglish.com/pronounce/${q}/english">▶️ YouGlish</a>
         </div>
       </div>
       <div class="sub">Phát âm qua video người bản xứ (YouGlish) &amp; định nghĩa đầy đủ (Cambridge).</div>
-      <iframe class="embed-frame" loading="lazy" src="https://youglish.com/pronounce/${encodeURIComponent(w)}/english?embed=1" allow="fullscreen"></iframe>
+      <iframe class="embed-frame" loading="lazy" src="https://youglish.com/pronounce/${q}/english?embed=1" allow="fullscreen"></iframe>
       <div class="row" style="margin-top:10px"><button class="btn sm" id="speakw">🔊 Đọc từ</button><button class="btn ghost sm" id="savew">＋ Lưu vào sổ</button></div>
     </div>`));
     $('#speakw', lookOut).onclick = () => { const u = new SpeechSynthesisUtterance(w); u.lang = 'en-US'; speechSynthesis.speak(u); };
