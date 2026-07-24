@@ -191,10 +191,11 @@ export function Images() {
     listWrap.innerHTML = '';
     if (!st.images.length) { listWrap.append(el('<div class="empty">Chưa có ảnh nào.</div>')); return; }
     st.images.forEach((img) => {
-      const c = el(`<div class="card"><img src="${img.dataUrl}" alt="${esc(img.name)}" style="width:100%;border-radius:10px;max-height:260px;object-fit:contain;background:var(--surface-2)">
+      const c = el(`<div class="card"><img alt="${esc(img.name)}" style="width:100%;border-radius:10px;max-height:260px;object-fit:contain;background:var(--surface-2)">
         <div class="row between" style="margin-top:8px"><span class="muted">${esc(img.name)}</span><span class="muted">${fmtDate(img.ts)}</span></div>
         <div class="row" style="margin-top:8px"><button class="btn sm" data-ai>🤖 Đọc &amp; phân tích (AI)</button><button class="btn ghost sm" data-del>🗑️ Xoá</button></div>
         <div class="ai-out" style="margin-top:10px"></div></div>`);
+      c.querySelector('img').src = img.dataUrl;
       c.querySelector('[data-del]').onclick = async () => { if (await confirmDialog('Xoá ảnh này?')) { store.removeFrom('images', img.id); render(); } };
       c.querySelector('[data-ai]').onclick = async () => {
         const b = c.querySelector('[data-ai]'); b.disabled = true; b.textContent = '⏳…';
