@@ -22,7 +22,7 @@ export function Vocab() {
     // Restrict lookups to plain words/phrases (letters, spaces, hyphen, apostrophe).
     const w = raw.replace(/[^\p{L}\p{N}\s'-]/gu, '').slice(0, 60).trim();
     if (!w) return toast('Từ tra không hợp lệ.', 'error');
-    const q = encodeURIComponent(w);
+    const q = esc(encodeURIComponent(w));
     lookOut.innerHTML = '';
     lookOut.append(el(`<div class="card">
       <div class="row between"><h3>“${esc(w)}”</h3>
