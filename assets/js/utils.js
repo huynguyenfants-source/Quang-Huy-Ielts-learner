@@ -83,7 +83,8 @@ export function readFileAsDataURL(file) {
   });
 }
 
-/** Simple word-level diff -> HTML with <ins>/<del>. */
+/** Word-level diff -> a safe DocumentFragment with <ins>/<del> nodes.
+ *  Text is added via textContent (never innerHTML), so it cannot inject markup. */
 export function diffWords(a = '', b = '') {
   const aw = a.split(/(\s+)/), bw = b.split(/(\s+)/);
   const n = aw.length, m = bw.length;
@@ -91,13 +92,20 @@ export function diffWords(a = '', b = '') {
   for (let i = n - 1; i >= 0; i--)
     for (let j = m - 1; j >= 0; j--)
       dp[i][j] = aw[i] === bw[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
-  let i = 0, j = 0, out = '';
+  const frag = document.createDocumentFragment();
+  const emit = (tag, text) => {
+    if (!tag) { frag.appendChild(document.createTextNode(text)); return; }
+    const node = document.createElement(tag);
+    node.textContent = text;
+    frag.appendChild(node);
+  };
+  let i = 0, j = 0;
   while (i < n && j < m) {
-    if (aw[i] === bw[j]) { out += esc(aw[i]); i++; j++; }
-    else if (dp[i + 1][j] >= dp[i][j + 1]) { if (aw[i].trim()) out += `<del>${esc(aw[i])}</del>`; else out += aw[i]; i++; }
-    else { if (bw[j].trim()) out += `<ins>${esc(bw[j])}</ins>`; else out += bw[j]; j++; }
+    if (aw[i] === bw[j]) { emit(null, aw[i]); i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) { emit(aw[i].trim() ? 'del' : null, aw[i]); i++; }
+    else { emit(bw[j].trim() ? 'ins' : null, bw[j]); j++; }
   }
-  while (i < n) { if (aw[i].trim()) out += `<del>${esc(aw[i])}</del>`; else out += aw[i]; i++; }
-  while (j < m) { if (bw[j].trim()) out += `<ins>${esc(bw[j])}</ins>`; else out += bw[j]; j++; }
-  return out;
+  while (i < n) { emit(aw[i].trim() ? 'del' : null, aw[i]); i++; }
+  while (j < m) { emit(bw[j].trim() ? 'ins' : null, bw[j]); j++; }
+  return frag;
 }

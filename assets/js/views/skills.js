@@ -136,7 +136,9 @@ function renderWritingResult(root, res, original) {
   } else iss.append(el('<p class="muted">Không phát hiện lỗi phổ biến.</p>'));
 
   const corr = el('<div class="card diff" style="margin-top:14px"><h3>✅ Bản sửa đề xuất</h3></div>');
-  corr.append(el(`<p>${diffWords(original, res.corrected)}</p>`));
+  const corrP = el('<p></p>');
+  corrP.appendChild(diffWords(original, res.corrected));
+  corr.appendChild(corrP);
 
   root.append(scoreCard, sug, iss, corr);
 }

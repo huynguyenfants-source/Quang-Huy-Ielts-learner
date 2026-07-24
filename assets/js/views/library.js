@@ -19,22 +19,27 @@ export function Vocab() {
   const doLook = () => {
     const raw = $('#vq', tools).value.trim();
     if (!raw) return;
-    // Restrict lookups to plain words/phrases (letters, spaces, hyphen, apostrophe).
+    // Whitelist to plain words/phrases (letters, numbers, spaces, hyphen, apostrophe).
     const w = raw.replace(/[^\p{L}\p{N}\s'-]/gu, '').slice(0, 60).trim();
     if (!w) return toast('Từ tra không hợp lệ.', 'error');
-    const q = esc(encodeURIComponent(w));
+    const q = encodeURIComponent(w);
     lookOut.innerHTML = '';
-    lookOut.append(el(`<div class="card">
-      <div class="row between"><h3>“${esc(w)}”</h3>
-        <div class="row">
-          <a class="btn ghost sm" target="_blank" rel="noopener" href="https://dictionary.cambridge.org/dictionary/english/${q}">📖 Cambridge</a>
-          <a class="btn ghost sm" target="_blank" rel="noopener" href="https://youglish.com/pronounce/${q}/english">▶️ YouGlish</a>
-        </div>
-      </div>
+    const card = el(`<div class="card">
+      <div class="row between"><h3>“${esc(w)}”</h3><div class="row" id="links"></div></div>
       <div class="sub">Phát âm qua video người bản xứ (YouGlish) &amp; định nghĩa đầy đủ (Cambridge).</div>
-      <iframe class="embed-frame" loading="lazy" src="https://youglish.com/pronounce/${q}/english?embed=1" allow="fullscreen"></iframe>
+      <div id="frameHolder"></div>
       <div class="row" style="margin-top:10px"><button class="btn sm" id="speakw">🔊 Đọc từ</button><button class="btn ghost sm" id="savew">＋ Lưu vào sổ</button></div>
-    </div>`));
+    </div>`);
+    // Build links & iframe via DOM properties (URLs set on element, never via innerHTML).
+    const mkLink = (label, url) => { const a = document.createElement('a'); a.className = 'btn ghost sm'; a.target = '_blank'; a.rel = 'noopener'; a.href = url; a.textContent = label; return a; };
+    $('#links', card).append(
+      mkLink('📖 Cambridge', `https://dictionary.cambridge.org/dictionary/english/${q}`),
+      mkLink('▶️ YouGlish', `https://youglish.com/pronounce/${q}/english`));
+    const frame = document.createElement('iframe');
+    frame.className = 'embed-frame'; frame.loading = 'lazy'; frame.allow = 'fullscreen';
+    frame.src = `https://youglish.com/pronounce/${q}/english?embed=1`;
+    $('#frameHolder', card).append(frame);
+    lookOut.append(card);
     $('#speakw', lookOut).onclick = () => { const u = new SpeechSynthesisUtterance(w); u.lang = 'en-US'; speechSynthesis.speak(u); };
     $('#savew', lookOut).onclick = () => editVocab({ word: w }, () => render());
   };
@@ -223,7 +228,15 @@ export function Bilingual() {
     out.innerHTML = '';
     const bi = el('<div class="bilingual"></div>');
     bi.append(el(`<div class="col"><strong class="muted">English</strong><p style="white-space:pre-wrap">${esc(text)}</p></div>`));
-    bi.append(el(`<div class="col"><strong class="muted">Tiếng Việt</strong><p style="white-space:pre-wrap">${vi ? esc(vi) : ''}</p>${vi ? '' : `<a class="btn ghost sm" target="_blank" rel="noopener" href="https://translate.google.com/?sl=en&tl=vi&text=${encodeURIComponent(text)}">Mở Google Dịch</a>`}</div>`));
+    const viCol = el(`<div class="col"><strong class="muted">Tiếng Việt</strong><p style="white-space:pre-wrap">${vi ? esc(vi) : ''}</p></div>`);
+    if (!vi) {
+      const a = document.createElement('a');
+      a.className = 'btn ghost sm'; a.target = '_blank'; a.rel = 'noopener';
+      a.href = `https://translate.google.com/?sl=en&tl=vi&text=${encodeURIComponent(text)}`;
+      a.textContent = 'Mở Google Dịch';
+      viCol.append(a);
+    }
+    bi.append(viCol);
     out.append(bi);
   };
   return wrap;
