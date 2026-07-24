@@ -1,4 +1,4 @@
-# Quang Huy · IELTS & English Learner
+# Quang Huy · 
 
 Ứng dụng web **học tiếng Anh cá nhân** cho Quang Huy — đủ **4 kỹ năng Nghe · Nói · Đọc · Viết**, có **chấm – chữa – gợi ý sửa**, phân tích điểm yếu và nhiều công cụ hữu ích. Toàn bộ chạy ngay trên trình duyệt, **dữ liệu lưu trên máy bạn**, và **bạn có thể tự sửa dễ dàng**.
 
