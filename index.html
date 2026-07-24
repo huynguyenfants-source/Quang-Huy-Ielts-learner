@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quang Huy · IELTS &amp; English Learner</title>
+  <meta name="description" content="Ứng dụng học tiếng Anh cá nhân: Nghe · Nói · Đọc · Viết, chấm chữa &amp; gợi ý bằng AI, thi thử IELTS, sổ từ vựng, lỗi hay gặp và tài liệu." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-logo">📚</span>
+        <div class="brand-text">
+          <strong>Quang Huy</strong>
+          <small>IELTS &amp; English</small>
+        </div>
+      </div>
+      <nav class="nav" id="nav"><!-- built by app.js --></nav>
+      <div class="sidebar-footer">
+        <button class="btn ghost" id="themeToggle" title="Đổi giao diện sáng/tối">🌗 Giao diện</button>
+        <small class="muted">Dữ liệu lưu trên máy bạn</small>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <button class="icon-btn" id="menuToggle" aria-label="Menu">☰</button>
+        <div class="topbar-title" id="topbarTitle">Trang chủ</div>
+        <div class="topbar-actions">
+          <input type="search" id="globalSearch" placeholder="🔎 Tra từ / tìm nhanh…" />
+          <button class="btn" id="quickAdd">＋ Ghi chú</button>
+        </div>
+      </header>
+
+      <section class="view" id="view"><!-- rendered by router --></section>
+
+      <footer class="appfooter">
+        <span class="muted">Made for Quang Huy · Sửa dễ dàng: mọi nội dung nằm trong <code>assets/js</code> &amp; lưu ở trình duyệt.</span>
+      </footer>
+    </main>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot" class="toast-root"></div>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
