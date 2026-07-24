@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Learner Copilot</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>IELTS Learner Copilot</h1>
+        <nav>
+            <button onclick="app.navigateTo('skills')">Kỹ năng (Skills)</button>
+            <button onclick="app.navigateTo('grammar')">Ngữ pháp (Grammar)</button>
+            <button onclick="app.navigateTo('library')">Thư viện (Library)</button>
+        </nav>
+    </header>
+
+    <main id="app-content">
+        <!-- Nội dung các trang sẽ được JavaScript render vào đây -->
+        <h2>Chào mừng bạn đến với ứng dụng học IELTS!</h2>
+        <p>Chọn một mục trên thanh điều hướng để bắt đầu.</p>
+    </main>
+
+    <!-- Hộp thoại AI Chatbot -->
+    <aside id="ai-copilot">
+        <div id="ai-chat-box"></div>
+        <input type="text" id="ai-input" placeholder="Hỏi AI bất cứ điều gì...">
+        <button onclick="ai.ask()">Gửi</button>
+    </aside>
+
+    <!-- Nạp các công cụ tiện ích và quản lý trạng thái -->
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/store.js"></script>
+    <script src="assets/js/content.js"></script>
+    
+    <!-- Nạp các tính năng và view -->
+    <script src="assets/js/ai.js"></script>
+    <script src="assets/js/grammar.js"></script>
+    <script src="assets/js/views/library.js"></script>
+    <script src="assets/js/views/skills.js"></script>
+    
+    <!-- Lõi ứng dụng -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
